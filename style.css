@@ -9,10 +9,10 @@ body {
 }
 
 .container {
-    display: grid;
     grid-template-columns: repeat(10, 1fr);
     row-gap: 50px;
     column-gap: 20px;
+    display: none;
 }
 
 .inner {
@@ -39,6 +39,37 @@ img {
     font-size: medium;
     font-weight: bolder;
     font-style: italic;
+}
+
+.load {
+    position:absolute;
+    display: flex;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+}
+
+.load > div {
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+    background-color: grey;
+    border-radius: 50%;
+    animation: moveCircles 2s infinite alternate-reverse ease-in 1s;
+}
+
+@keyframes moveCircles {
+    from {
+        transform: translateY(-50px);
+    }
+
+    50% {
+        transform: translateY(0px);
+    }
+
+    to {
+        transform: translateY(50px);
+    }
 }
 
 @media screen and (max-width: 1700px) {

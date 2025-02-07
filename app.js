@@ -1,4 +1,5 @@
 const container = document.querySelector(".container");
+const loader = document.querySelector(".load");
 const UsersURL = fetch("https://dummyjson.com/users");
 
 UsersURL
@@ -17,10 +18,14 @@ UsersURL
     .catch(err => {
         console.error(err)
     })
+    .finally(()=> {
+        loader.style.display = "none";
+        container.style.display = "grid";
+    })
 
 function renderUsers(element, name, lastName, year, city, state, image) {
     element.innerHTML += `<div class="inner">
-                            <img src=${image} alt="emily">
+                            <img src=${image} alt="${name}">
                             <div class="info">${name}</div>
                             <div class="info">${lastName}</div>
                             <div class="info">${year} year</div>

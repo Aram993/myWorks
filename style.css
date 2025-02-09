@@ -9,10 +9,10 @@ body {
 }
 
 .container {
+    display: none;
     grid-template-columns: repeat(10, 1fr);
     row-gap: 50px;
     column-gap: 20px;
-    display: none;
 }
 
 .inner {

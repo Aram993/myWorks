@@ -1,27 +1,25 @@
 const container = document.querySelector(".container");
 const loader = document.querySelector(".load");
-const UsersURL = fetch("https://dummyjson.com/users");
+const UsersURL = "https://dummyjson.com/users";
 
-UsersURL
-    .then(response => {
+async function getUsers (URL) {
+    try {
+        const response = await fetch(URL);
         if (!response.ok) {
-            throw new Error("Ошибка запроса!");
+            throw new Error("Ошибка запроса!")
         }
-        return response.json();
-    })
-    .then(users => {
-        const user = users.users;
-        user.forEach(item => {
+        const data = await response.json();
+        const arr = data.users;
+        arr.forEach(item => {
             renderUsers(container, item.firstName, item.lastName, item.age, item.address.city, item.address.state, item.image);
-        })
-    })
-    .catch(err => {
-        console.error(err)
-    })
-    .finally(()=> {
+        });
+    } catch (err) {
+        console.error(err);
+    } finally {
         loader.style.display = "none";
         container.style.display = "grid";
-    })
+    }
+}
 
 function renderUsers(element, name, lastName, year, city, state, image) {
     element.innerHTML += `<div class="inner">
@@ -33,3 +31,5 @@ function renderUsers(element, name, lastName, year, city, state, image) {
                             <div class="info">${state}</div>
                         </div>`
 }
+
+getUsers(UsersURL);

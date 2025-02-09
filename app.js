@@ -9,8 +9,8 @@ async function getUsers (URL) {
             throw new Error("Ошибка запроса!")
         }
         const data = await response.json();
-        const arr = data.users;
-        arr.forEach(item => {
+        const users = data.users;
+        users.forEach(item => {
             renderUsers(container, item.firstName, item.lastName, item.age, item.address.city, item.address.state, item.image);
         });
     } catch (err) {

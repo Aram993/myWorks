@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src="app.js" defer></script>
     <title>Document</title>
 </head>
 <body>
@@ -14,8 +13,9 @@
             <input type="text" id="input" class="inpt">
             <input type="submit" class="sbmt">
         </form>
-        <div class="tasks">
+        <div class="block">
             <span class="list">Список задач:</span>
+            <div class="tasks">
             <!-- <div class="task">
                 <span id="date">25.01.2025</span>
                 <label for="inpt">Clean dishes</label>
@@ -24,6 +24,9 @@
                 <button class="edit">Изменить</button>
             </div> -->
         </div>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

@@ -48,13 +48,14 @@ form > label {
     font-weight: bolder;
     font-style: italic;
     color: crimson;
-    margin: 15px;
+    margin: 0 15px 15px;
 }
 
 .tasks {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 700px;
 }
 
 .task {
@@ -62,17 +63,20 @@ form > label {
     border: 2px solid black;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: space-between;
+    /* gap: 15px; */
     margin: 15px;
     padding: 3px;
+    width: 100%;
 }
 
 .task > span {
     font-family: 'Courier New', Courier, monospace;
-    font-size: larger;
+    font-size: medium;
     font-weight: bolder;
     font-style: italic;
     color: red;
+    width: 15%;
 }
 
 .task > label {
@@ -81,9 +85,14 @@ form > label {
     font-weight: bolder;
     font-style: italic;
     color: darkblue;
+    width: 40%;
 }
 
 .task >input {
     height: 25px;
     width: 25px;
+}
+
+.line {
+    text-decoration: line-through;
 }

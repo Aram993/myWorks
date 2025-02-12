@@ -2,6 +2,11 @@ const wrapper = document.querySelector(".tasks");
 const submitBtn = document.querySelector(".sbmt");
 const taskInput = document.querySelector(".inpt");
 
+async function getData () {
+    const response = await axios.get("http://localhost:3000/tasks");
+    return response.data;
+}
+
 async function getTasks () {
     const response = await axios.get("http://localhost:3000/tasks");
     const tasks = response.data;
@@ -25,6 +30,7 @@ function renderTasks (element, date, taskName, check, id) {
                         `
     element.append(task);
     const box = document.querySelectorAll(".box");
+    const delBtn = document.querySelectorAll(".del");
     box.forEach(item => {
         if (item.hasAttribute("checked")) {
             item.previousElementSibling.classList.add("line");
@@ -32,17 +38,26 @@ function renderTasks (element, date, taskName, check, id) {
             item.previousElementSibling.classList.remove("line");
         }
     });
+
+    delBtn.forEach((btn, index) => {
+        btn.addEventListener("click", async ()=> {
+            await delTasks({id: 1, name: "read book", date: "25.01.2025", done: true});
+        });
+    });
 };
 
 
-submitBtn.addEventListener("click", (event)=> {
+submitBtn.addEventListener("click", async (event)=> {
     event.preventDefault();
-    postTasks(taskInput.value);
-    getTasks();
+    await postTasks(taskInput.value);
+    await getTasks();
     taskInput.value = "";
 });
 
 async function postTasks (value) {
     const response = await axios.post("http://localhost:3000/tasks", {name: value, date: new Date().toLocaleDateString(), done: false});
-    console.log(response);
+}
+
+async function delTasks (task) {
+    const response = await axios.delete("http://localhost:3000/tasks", task);
 }

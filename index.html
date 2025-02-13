@@ -16,14 +16,32 @@
         <div class="block">
             <span class="list">Список задач:</span>
             <div class="tasks">
-            <!-- <div class="task">
-                <span id="date">25.01.2025</span>
-                <label for="inpt">Clean dishes</label>
-                <input type="checkbox" id="inpt">
-                <button class="del">Удалить</button>
-                <button class="edit">Изменить</button>
-            </div> -->
+            </div>
         </div>
+    </div>
+    <div class="modalBackground">
+        <div class="modalActive">
+            <div class="modalClose">
+                <img src="./cross-svgrepo-com.svg" />
+            </div>
+            <div class="modalWindow">
+                <div class="top">
+                    <label for="t">Введите название задачи</label>
+                    <input type="text" id="t">
+                </div>
+                <div class="top">
+                    <label for="m">Введите дату создания</label>
+                    <input type="date" id="m">
+                </div>
+                <div class="bottom">
+                    <input type="radio" id="contactChoice1" name="contact" value="yes" />
+                    <label for="contactChoice1">Задача выполнена</label>
+                
+                    <input type="radio" id="contactChoice2" name="contact" value="no" />
+                    <label for="contactChoice2">Задача не выполнена</label>
+                </div>
+                <button class="modal-button">Отправить</button>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

@@ -9,6 +9,9 @@ const modalDate = document.querySelector("#m");
 const contactChoice1 = document.querySelector("#contactChoice1");
 const contactChoice2 = document.querySelector("#contactChoice2");
 
+const tasksArray = [];
+
+//fetchTasks()
 async function getData () {
     try {
         const response = await axios.get("http://localhost:3000/tasks");
@@ -18,13 +21,14 @@ async function getData () {
     };
 };
 
+//renderInitialTasks()
 async function getTasks () {
     try {
+        
         const tasks = await getData();
+        tasksArray.push(...tasks);
         wrapper.textContent = "";
-        tasks.forEach(task => {
-            renderTasks(wrapper, task.date, task.name, task.done, task.id);
-        });
+        renderTasks();
     } catch (error) {
         console.error(error);
     };
@@ -32,22 +36,29 @@ async function getTasks () {
 
 getTasks();
 
-function renderTasks (element, date, taskName, check, id) {
-    const task = document.createElement("div");
-    task.className = "task";
-    task.innerHTML +=   `   
-                            <span id="date">${date}</span>
-                            <label for="${id}">${taskName}</label>
-                            <input class="box" type="checkbox" id="${id}"${check ? "checked" : ""}>
-                            <button class="del">Удалить</button>
-                            <button class="edit">Изменить</button>
-                        `
-    element.append(task);
+
+
+//renderTaks()
+function renderTasks () {
+    wrapper.textContent = '';
+    tasksArray.forEach(item => {
+        const task = document.createElement("div");
+        task.className = "task";
+        task.innerHTML +=   `   
+                                <span id="date">${item.date}</span>
+                                <label for="${item.id}">${item.name}</label>
+                                <input class="box" type="checkbox" id="${item.id}"${item.done ? "checked" : ""}>
+                                <button class="del">Удалить</button>
+                                <button class="edit">Изменить</button>
+                            `
+        wrapper.append(task);
+    })
+  
     const box = document.querySelectorAll(".box");
     const delBtn = document.querySelectorAll(".del");
     const editBtn = document.querySelectorAll(".edit");
     box.forEach(item => {
-        if (item.hasAttribute("checked")) {
+        if (item.checked) {
             item.previousElementSibling.classList.add("line");
         } else {
             item.previousElementSibling.classList.remove("line");
@@ -63,20 +74,30 @@ function renderTasks (element, date, taskName, check, id) {
                 await change(item.getAttribute("id"), {done: true});
                 await getTasks();
             };
+
+            // await change(item.getAttribute("id"), {done: !item.checked});
+            // await getTasks();
         });
     });
 
     delBtn.forEach(btn => {
         btn.addEventListener("click", async ()=> {
             const taskId = btn.previousElementSibling.id;
+            let idx;
             await delTasks(taskId);
-            await getTasks();
+            tasksArray.forEach((task, index) => {
+                if (task.id === Number(taskId)) {
+                    idx = index;
+                }
+            });
+            tasksArray.splice(idx, 1);
+            renderTasks();
         });
     });
 
     editBtn.forEach(item => {
         item.addEventListener("click", ()=> {
-            modalName.value = item.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+            modalName.value = item.parentElement.querySelector('label').textContent;
             modalName.dataset.taskId = item.previousElementSibling.previousElementSibling.previousElementSibling.getAttribute("for");
             modalDate.value = item.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
             modal.style.display = "block";
@@ -95,8 +116,9 @@ function renderTasks (element, date, taskName, check, id) {
 submitBtn.addEventListener("click", async (event)=> {
     try {
         event.preventDefault();
-        await postTasks(taskInput.value);
-        await getTasks();
+        const newTask = await postTasks(taskInput.value);
+        tasksArray.push(newTask);
+        renderTasks();
         taskInput.value = "";
     } catch (error) {
         console.error(error);
@@ -108,6 +130,7 @@ async function postTasks (value) {
         const dateNow = new Date().toLocaleDateString();
         const newDate = dateNow.split(".").reverse().join("-");
         const response = await axios.post("http://localhost:3000/tasks", {name: value, date: newDate, done: false});
+        return response.data;
     } catch (error) {
         console.error(error);
     };

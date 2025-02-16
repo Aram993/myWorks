@@ -5,7 +5,6 @@ const select = document.querySelector("#authors");
 const container = document.querySelector(".container");
 const pages = document.querySelectorAll(".page");
 const cardsField = document.querySelector(".cards-field");
-const skip = document.querySelectorAll(".skip");
 
 const authorsArray = [];
 const booksArray = [];
@@ -57,9 +56,9 @@ function renderBooks (arr, arr2) {
                                                 <div>${item.name}</div>   
                                             </div>`
             }
-        })
-    })
-}
+        });
+    });
+};
 
 pages.forEach(page => {
     page.addEventListener("click", ()=> {
@@ -77,22 +76,73 @@ function clearPageColor (arr) {
     });
 };
 
-select.addEventListener("change", ()=> {
+select.addEventListener("change", async ()=> {
+    
+    const author = await filterAuthors(Number(select.value));
+    const books = await filterBooks(Number(select.value));
+
     if (select.value === "0") {
         getBooks(1);
-        skip.forEach(item => {
-            item.style.display = "flex";
+        pages.forEach(page => {
+            page.style.display = "flex";
         });
-
     } else {
-        const filteredBooks = booksArray.filter(book => {
-            return book.authorId === Number(select.value);
-        });
-
-        skip.forEach(item => {
-            item.style.display = "none";
-        });
-        
-        renderBooks(authorsArray, filteredBooks);
+        skipPages(books);
+        renderBooks(author, books);
     };
 });
+
+async function filterAuthors (id) {
+    const response = await axios.get(`http://localhost:3000/authors?id=${id}`);
+    return response.data;
+}
+
+async function filterBooks (id) {
+    const response = await axios.get(`http://localhost:3000/books?authorId=${id}`);
+    return response.data;
+}
+
+function skipPages (array) {
+    if (array.length <= 4) {
+        pages.forEach((page, index) => {
+            if (index > 0) {
+                page.style.display = "none";
+            };
+        });
+
+    } else if (array.length <= 8) {
+        pages.forEach((page, index) => {
+            if (index > 1) {
+                page.style.display = "none";
+            };
+        });
+
+    } else if (array.length <= 12) {
+        pages.forEach((page, index) => {
+            if (index > 2) {
+                page.style.display = "none";
+            };
+        });
+
+    } else if (array.length <= 16) {
+        pages.forEach((page, index) => {
+            if (index > 3) {
+                page.style.display = "none";
+            };
+        });
+
+    } else if (array.length <= 20) {
+        pages.forEach((page, index) => {
+            if (index > 4) {
+                page.style.display = "none";
+            };
+        });
+
+    } else if (array.length <= 24) {
+        pages.forEach((page, index) => {
+            if (index > 5) {
+                page.style.display = "none";
+            };
+        });
+    };
+};

@@ -5,6 +5,7 @@ const select = document.querySelector("#authors");
 const container = document.querySelector(".container");
 const pages = document.querySelectorAll(".page");
 const cardsField = document.querySelector(".cards-field");
+const input = document.querySelector("#inpt");
 
 const authorsArray = [];
 const booksArray = [];
@@ -76,6 +77,31 @@ function clearPageColor (arr) {
     });
 };
 
+async function getSpecificBooks (id, value) {
+    try {
+        const response = await axios.get(`http://localhost:3000/books?q=${value}&_page=${id}&_limit=4`);
+        renderBooks(authorsArray, response.data);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+input.addEventListener("input", async ()=> {
+    const response = await axios.get(`http://localhost:3000/books?q=${input.value}&_page=1&_limit=4`);
+    const fullResponse = await axios.get(`http://localhost:3000/books?q=${input.value}`);
+    renderBooks(authorsArray, response.data);
+    console.log(response.data);
+    skipPages(fullResponse.data);
+    pages.forEach(page => {
+        page.addEventListener("click", ()=> {
+            clearPageColor(pages);
+            page.style.backgroundColor = "black";
+            page.style.color = "white";
+            getSpecificBooks(Number(page.textContent), input.value);
+        });
+    });
+});
+
 select.addEventListener("change", async ()=> {
     
     const author = await filterAuthors(Number(select.value));
@@ -102,8 +128,9 @@ async function filterBooks (id) {
     return response.data;
 }
 
-function skipPages (array) {
+async function skipPages (array) {
     if (array.length <= 4) {
+        showPages();
         pages.forEach((page, index) => {
             if (index > 0) {
                 page.style.display = "none";
@@ -112,12 +139,14 @@ function skipPages (array) {
 
     } else if (array.length <= 8) {
         pages.forEach((page, index) => {
+            showPages();
             if (index > 1) {
                 page.style.display = "none";
             };
         });
 
     } else if (array.length <= 12) {
+        showPages();
         pages.forEach((page, index) => {
             if (index > 2) {
                 page.style.display = "none";
@@ -125,6 +154,7 @@ function skipPages (array) {
         });
 
     } else if (array.length <= 16) {
+        showPages();
         pages.forEach((page, index) => {
             if (index > 3) {
                 page.style.display = "none";
@@ -132,6 +162,7 @@ function skipPages (array) {
         });
 
     } else if (array.length <= 20) {
+        showPages();
         pages.forEach((page, index) => {
             if (index > 4) {
                 page.style.display = "none";
@@ -139,6 +170,7 @@ function skipPages (array) {
         });
 
     } else if (array.length <= 24) {
+        showPages();
         pages.forEach((page, index) => {
             if (index > 5) {
                 page.style.display = "none";
@@ -146,3 +178,9 @@ function skipPages (array) {
         });
     };
 };
+
+function showPages () {
+    pages.forEach(page => {
+        page.style.display = "flex";
+    })
+}

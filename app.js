@@ -89,8 +89,16 @@ async function getSpecificBooks (id, value) {
 input.addEventListener("input", async ()=> {
     const response = await axios.get(`http://localhost:3000/books?q=${input.value}&_page=1&_limit=4`);
     const fullResponse = await axios.get(`http://localhost:3000/books?q=${input.value}`);
+    if (input.value.length === 0) {
+        showPages();
+    };
+
     renderBooks(authorsArray, response.data);
-    console.log(response.data);
+    
+    if (fullResponse.data.length === 0) {
+        cardsField.textContent = "Книга не найдена!";
+    };
+
     skipPages(fullResponse.data);
     pages.forEach(page => {
         page.addEventListener("click", ()=> {

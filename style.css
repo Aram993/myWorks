@@ -59,13 +59,31 @@ body {
     cursor: pointer;
 }
 
-#firstPage {
+.page.active {
     background-color: black;
     color: #fff;
 }
 
-input {
+#inpt {
     width: 943.5px;
     height: 30px;
     border: 2px solid black;
+}
+
+.limit {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    width: 943.5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    font-weight: bolder;
+    font-style: italic;
+}
+
+.sort {
+    margin: 0 100px;
 }

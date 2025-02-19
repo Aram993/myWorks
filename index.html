@@ -14,18 +14,31 @@
         </select>
         <label for="inpt">Введите название книги</label>
         <input type="text" id="inpt">
+        <div class="limit">
+            <div>Выберите количество элементов на странице:</div>
+            <form>
+                <label for="three">Три</label>
+                <input id="three" type="radio" name="cards-limit" class="radio" value="3">
+                <label for="four">Четыре</label>
+                <input id="four" type="radio" name="cards-limit" class="radio" value="4">
+                <label for="five">Пять</label>
+                <input id="five" type="radio" name="cards-limit" class="radio" value="5">
+            </form>
+        </div>
+    </div>
+    <div class="sort">
+        <label for="price">Сортировка</label>
+        <select name="" id="price">
+            <option value="0"></option>
+            <option value="1">По возростанию цены</option>
+            <option value="2">По убыванию цены</option>
+        </select>
     </div>
     <div class="cards-field"></div>
-    <div class="numbers">
-        <div class="page" id="firstPage">1</div>
-        <div class="page">2</div>
-        <div class="page">3</div>
-        <div class="page">4</div>
-        <div class="page">5</div>
-        <div class="page">6</div>
-        <div class="page">7</div>
+    <div class="numbers" id="pagination">
+        
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

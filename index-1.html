@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <label for="authors">Введите название автора</label>
+        <select name="" id="authors">
+            <option value="0"></option>
+        </select>
+        <label for="inpt">Введите название книги</label>
+        <input type="text" id="inpt">
+        <div class="limit">
+            <div>Выберите количество элементов на странице:</div>
+            <form>
+                <label for="three">Три</label>
+                <input id="three" type="radio" name="cards-limit" class="radio" value="3">
+                <label for="four">Четыре</label>
+                <input id="four" type="radio" name="cards-limit" class="radio" value="4">
+                <label for="five">Пять</label>
+                <input id="five" type="radio" name="cards-limit" class="radio" value="5">
+            </form>
+        </div>
+    </div>
+    <div class="sort">
+        <label for="price">Сортировка</label>
+        <select name="" id="price">
+            <option value="0"></option>
+            <option value="1">По возростанию цены</option>
+            <option value="2">По убыванию цены</option>
+        </select>
+    </div>
+    <div class="cards-field"></div>
+    <div class="numbers" id="pagination">
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

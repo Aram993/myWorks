@@ -69,18 +69,18 @@
         <input type="text" placeholder="Поиск товара...">
         <select id="categoryFilter">
             <option value="all">Все категории</option>
-            <option value="electronics">Электроника</option>
-            <option value="clothing">Одежда</option>
+            <!-- <option value="electronics">Электроника</option>
+            <option value="clothing">Одежда</option> -->
         </select>
         <select id="filter">
-            <option     value="">Цена: по возрастанию</option>
-            <option  value=""">Цена: по убыванию</option>
-            <option  value="">Название: А-Я</option>
-            <option  value="">Название: Я-А</option>
+            <option     value="_sort=price&_order=asc">Цена: по возрастанию</option>
+            <option  value="_sort=price&_order=desc"">Цена: по убыванию</option>
+            <option  value="_sort=name&_order=asc">Название: А-Я</option>
+            <option  value="_sort=name&_order=desc">Название: Я-А</option>
         </select>
     </div>
     <div class="products">
-        <div class="card">
+        <!-- <div class="card">
             <img src="https://via.placeholder.com/150" alt="Футболка">
             <h3>Футболка</h3>
             <p>Стильная футболка.</p>
@@ -110,17 +110,17 @@
             <p>Стильная футболка.</p>
             <p><strong>Электроника</strong></p>
             <p><strong>20 $</strong></p>
-        </div>
+        </div> -->
     </div>
     <div class="pagination">
-        <button>1</button>
+        <!-- <button>1</button>
         <button>2</button>
         <button>3</button>
-        <button>4</button>
+        <button>4</button> -->
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="script.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -70,12 +70,69 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        .limit-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .numbers {
+            display: flex;
+        }
+        .inpt {
+            margin: 0 5px;
+            padding: 10px 15px;
+            border: none;
+            background: #52585e;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+            /* HTML: <div class="loader"></div> */
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: fit-content;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 30px;
+            background:linear-gradient(90deg,#000 50%,#0000 0) right/200% 100%;
+            animation: l21 2s infinite linear;
+        }
+        .loader::before {
+            content :"Loading...";
+            color: #0000;
+            padding: 0 5px;
+            background: inherit;
+            background-image: linear-gradient(90deg,#fff 50%,#000 0);
+            -webkit-background-clip:text;
+            background-clip:text;
+        }
+
+        @keyframes l21{
+            100%{background-position: left}
+        }
+
+        .dark {
+            width: 100%;
+	        height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="filters">
-        <input type="text" placeholder="Поиск товара...">
+        <input type="text" placeholder="Поиск товара..." id="searchInput">
         <select id="categoryFilter">
             <option value="all">Все категории</option>
         </select>
@@ -86,9 +143,25 @@
             <option value="&_sort=name&_order=desc">Название: Я-А</option>
         </select>
     </div>
+    <div class="limit-info">
+        <p><b>Выберите количество отбражаемых товаров на странице:</b></p>
+        <div class="numbers">
+            <label class="inpt">
+                <input name="limit" type="radio" value="4" class="limitsInput"> 4
+            </label>
+            <label class="inpt">
+                <input name="limit" type="radio" value="8" checked class="limitsInput"> 8
+            </label>
+            <label class="inpt">
+                <input name="limit" type="radio" value="12" class="limitsInput"> 12
+            </label>
+        </div>
+        
+    </div>
     <div class="products"></div>
     <div class="pagination"></div>
 </div>
+<div class="loader"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="script.js"></script>

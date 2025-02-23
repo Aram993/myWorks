@@ -21,8 +21,6 @@ let search = `&name_like=${searchValue}`;
 
 async function getProducts() {
     try {
-        loader.style.display = "block";
-
         const response = await $axios.get(`/products?_expand=category&_page=${page}&_limit=${limit}${sortedValue}${(isNaN(categoryId)) ? "" : categoryValue}${search}`);
         const totalProducts = response.headers["x-total-count"];
         const numberOfPages = Math.ceil(totalProducts / limit);
@@ -72,9 +70,8 @@ function renderPages (pages) {
 
     paginationButton.forEach(button => {
         button.addEventListener("click", async ()=> {
+            loader.style.display = "block";
             try {
-                loader.style.display = "block";
-
                 page = Number(button.textContent);
                 await getProducts();
             } catch(err) {
@@ -93,9 +90,8 @@ function renderCategories (categories) {
 }
 
 categoryContainer.addEventListener("change", async ()=> {
+    loader.style.display = "block";
     try {
-        loader.style.display = "block";
-
         page = 1;
         categoryId = Number(categoryContainer.value);
         categoryValue = `&categoryId=${categoryId}`;
@@ -108,8 +104,8 @@ categoryContainer.addEventListener("change", async ()=> {
 })
 
 SortedValuesContainer.addEventListener("change", async ()=> {
+    loader.style.display = "block";
     try {
-        loader.style.display = "block";
         page = 1;
         sortedValue = SortedValuesContainer.value;
         await getProducts();
@@ -121,9 +117,8 @@ SortedValuesContainer.addEventListener("change", async ()=> {
 })
 
 searchInput.addEventListener("input", async ()=> {
+    loader.style.display = "block";
     try {
-        loader.style.display = "block";
-
         page = 1;
         searchValue = searchInput.value;
         search = `&name_like=${searchValue}`
@@ -133,14 +128,12 @@ searchInput.addEventListener("input", async ()=> {
     } finally {
         loader.style.display = "none";
     }
-    
 })
 
 limitsInput.forEach(input => {
     input.addEventListener("change", async ()=> {
+        loader.style.display = "block";
         try {
-            loader.style.display = "block";
-
             limit = Number(input.value);
             await getProducts();
         } catch (err) {
@@ -154,9 +147,8 @@ limitsInput.forEach(input => {
 initFunctions();
 
 async function initFunctions () {
+    loader.style.display = "block";
     try {
-        loader.style.display = "block";
-
         await getProducts();
         await getCategories();
     } catch (error) {

@@ -1,158 +1,129 @@
-const instance = axios.create({
-    baseURL: 'http://localhost:3000/'
-});
+const $axios = axios.create({
+    baseURL: "http://localhost:3000"
+})
 
-const select = document.querySelector("#authors");
+const authorsEl = document.querySelector("#authors");
 const cardsField = document.querySelector(".cards-field");
-const pagination = document.querySelector("#pagination");
-const searchString = document.querySelector("#inpt");
-const radioBtn = document.querySelectorAll(".radio");
-const price = document.querySelector("#price");
+const paginationEl = document.querySelector("#pagination");
+const priceEl = document.querySelector("#price");
+const searchInput = document.querySelector("#inpt");
+const limitInputs = document.querySelector(".limit");
 
-let pageNumber = 1;
-let limitOfBooks = 4;
-let total = 0;
-
+let page = 1;
+let limit = 4;
+let sortedPrice = "0";
+let authorsFilter = "0";
+let authorsFilterValue;
+let searchValue = "";
 
 async function getAuthors () {
     try {
-        const response = await instance.get("authors");
+        const response = await $axios.get("/authors");
         renderAuthors(response.data);
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-async function getBooks (page, limitOfBooks, authorFilter = "", searchValue = "", priceValue = "") {
-    try {
-        const response = await instance.get(`books?_expand=author&_page=${page}&_limit=${limitOfBooks}&${authorFilter}&q=${searchValue}&${priceValue}`);
-        total = response.headers["x-total-count"];
-        renderBooks(response.data);
-        renderPage()
     } catch (err) {
         console.error(err);
     }
 }
 
-getAuthors();
-getBooks(pageNumber,limitOfBooks);
+async function getBooks () {
+    try {
+        const response = await $axios.get(`/books?_expand=author&_page=${page}&_limit=${limit}${(sortedPrice.length > 1) ? sortedPrice : ""}${(Number(authorsFilter) !== 0) ? authorsFilterValue : ""}&title_like=${searchValue}`);
+        const totalBooks = response.headers["x-total-count"];
+        const totalPages = Math.ceil(Number(totalBooks) / limit);
 
-function renderAuthors (authorsArray) {
-    authorsArray.forEach(author => {
-        select.innerHTML += `<option value="${author.id}">${author.name}</option>`;
-    });
-};
+        renderBooks(response.data);
+        getPages(totalPages);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function renderAuthors (authors) {
+    authors.forEach(author => {
+        authorsEl.innerHTML += `<option value="${author.id}">${author.name}</option>`;
+    })
+}
+
+authorsEl.addEventListener("change", async ()=> {
+    try {
+        page = 1;
+        authorsFilter = authorsEl.value;
+        authorsFilterValue = `&authorId=${authorsFilter}`
+        await getBooks();
+    } catch (err) {
+        console.error(err);
+    }
+})
 
 function renderBooks (books) {
     cardsField.textContent = "";
+
+    if (books.length === 0) {
+        cardsField.innerHTML = `    <div class="card">
+                                        <div>Книга не найдена</div>
+                                    </div>`
+    }
+
     books.forEach(book => {
         cardsField.innerHTML += `   <div class="card">
                                         <div>${book.title}</div>
-                                        <div>${book.price + "₽"}</div>
+                                        <div>${book.price}₽</div>
                                         <div>${book.author.name}</div>
                                     </div>`
-    });
-};
+    })
+}
 
-function renderPage () {
-    const numberOfPages = Math.ceil(total / limitOfBooks);
-    pagination.textContent = "";
-    for (let i = 1; i <= numberOfPages; i++) {
-        pagination.innerHTML += `<div class="page ${(pageNumber === i) ? "active" : "" }">${i}</div>`;
-    };
+function getPages (total) {
+    paginationEl.textContent = "";
 
-    const allPages = document.querySelectorAll(".page");
-    allPages.forEach(page => {
-        page.addEventListener("click", async ()=> {
-            pageNumber = Number(page.textContent);
-           
-            if (select.value > 0 && price.value === "1") {
-                let stringOfAuthorId = `authorId=${select.value}`;
-                stringOfPrice = `_sort=price&_order=asc`;
-                await getBooks(pageNumber,limitOfBooks,stringOfAuthorId, "", stringOfPrice);
-            } else if (select.value > 0 && price.value === "2") {
-                let stringOfAuthorId = `authorId=${select.value}`;
-                stringOfPrice = `_sort=price&_order=desc`;
-                await getBooks(pageNumber,limitOfBooks,stringOfAuthorId, "", stringOfPrice);
-            }else if (select.value > 0) {
-                let stringOfAuthorId = `authorId=${select.value}`;
-                await getBooks(pageNumber,limitOfBooks,stringOfAuthorId);
-            }  else if (searchString.value.length > 0) {
-                await getBooks(pageNumber,limitOfBooks, "", searchString.value);
-            } else if (price.value === "1") {
-                stringOfPrice = `_sort=price&_order=asc`;
-                getBooks(pageNumber, limitOfBooks, "", "" , stringOfPrice);
-            } else if (price.value === "2") {
-                stringOfPrice = `_sort=price&_order=desc`;
-                getBooks(pageNumber, limitOfBooks, "", "", stringOfPrice);
+    for (let i = 1; i <= total; i++) {
+        paginationEl.innerHTML += `<div class="page ${(page === i) ? "active" : ""}">${i}</div>`;
+    }
+
+    const pageEl = paginationEl.querySelectorAll(".page");
+    pageEl.forEach(pageBtn => {
+        pageBtn.addEventListener("click", async ()=> {
+            try {
+                page = Number(pageBtn.textContent);
+                await getBooks();
+            } catch (err) {
+                console.error(err);
             }
-            else {
-                await getBooks(pageNumber, limitOfBooks);
-            };
-        });
-    });
-};
+        })
+    })
+}
 
-select.addEventListener("change", getFilteredBooks);
+priceEl.addEventListener("change", async ()=> {
+    try {
+        page = 1;
+        sortedPrice = priceEl.value;
+        await getBooks();
+    } catch (err) {
+        console.error(err);
+    }
+})
 
-function getFilteredBooks () {
-    pageNumber = 1;
-    if (select.value === "0") {
-        getBooks(pageNumber, limitOfBooks);
-    } else {
-        let stringOfAuthorId = `authorId=${select.value}`;
-        getBooks(pageNumber,limitOfBooks,stringOfAuthorId);
-    };
-};
+searchInput.addEventListener("input", async ()=> {
+    page = 1;
+    searchValue = searchInput.value;
+    await getBooks();
+})
 
-searchString.addEventListener("input", ()=> {
-    pageNumber = 1;
-    getBooks(pageNumber,limitOfBooks, "", searchString.value);
-});
+limitInputs.querySelectorAll("input").forEach(inpt => {
+    inpt.addEventListener("change", async ()=> {
+        page = 1;
+        limit = Number(inpt.value);
+        await getBooks();
+    })
+})
 
-radioBtn.forEach(btn => {
-    btn.addEventListener("input", async ()=> {
-        limitOfBooks = Number(btn.value);
-        // getBooks(pageNumber, limitOfBooks);
-        if (select.value > 0) {
-            let stringOfAuthorId = `authorId=${select.value}`;
-            await getBooks(pageNumber,limitOfBooks,stringOfAuthorId);
-        } else if (searchString.value.length > 0) {
-            await getBooks(pageNumber,limitOfBooks, "", searchString.value);
-        } else if (price.value === "1") {
-            stringOfPrice = `_sort=price&_order=asc`;
-            getBooks(pageNumber, limitOfBooks, "", "" , stringOfPrice);
-        } else if (price.value === "2") {
-            stringOfPrice = `_sort=price&_order=desc`;
-            getBooks(pageNumber, limitOfBooks, "", "", stringOfPrice);
-        }
-        else {
-            await getBooks(pageNumber, limitOfBooks);
-        };
-    });
-});
+async function initData () {
+    try {
+        await getAuthors();
+        await getBooks();
+    } catch (err) {
+        console.error(err);
+    }
+}
 
-price.addEventListener("change", async ()=> {
-    let stringOfPrice;
-    pageNumber = 1;
-    if (price.value === "0" && select.value > 0) {
-        let stringOfAuthorId = `authorId=${select.value}`;
-        await getBooks(pageNumber,limitOfBooks,stringOfAuthorId);
-    } 
-    else if (price.value === "0") {
-        getBooks(pageNumber, limitOfBooks);
-    } else if (select.value > 0 && price.value === "1") {
-        let stringOfAuthorId = `authorId=${select.value}`;
-        stringOfPrice = `_sort=price&_order=asc`;
-        await getBooks(pageNumber,limitOfBooks,stringOfAuthorId, "", stringOfPrice);
-    } else if (select.value > 0 && price.value === "2") {
-        let stringOfAuthorId = `authorId=${select.value}`;
-        stringOfPrice = `_sort=price&_order=desc`;
-        await getBooks(pageNumber,limitOfBooks,stringOfAuthorId, "", stringOfPrice);
-    } else if (searchString.value.length > 0) {
-        await getBooks(pageNumber,limitOfBooks, "", searchString.value);
-    } else {
-        await getBooks(pageNumber, limitOfBooks);
-    };
-});
-
+initData();

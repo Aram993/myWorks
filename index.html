@@ -20,7 +20,7 @@
                 <label for="three">Три</label>
                 <input id="three" type="radio" name="cards-limit" class="radio" value="3">
                 <label for="four">Четыре</label>
-                <input id="four" type="radio" name="cards-limit" class="radio" value="4">
+                <input id="four" type="radio" name="cards-limit" class="radio" value="4" checked>
                 <label for="five">Пять</label>
                 <input id="five" type="radio" name="cards-limit" class="radio" value="5">
             </form>
@@ -30,8 +30,8 @@
         <label for="price">Сортировка</label>
         <select name="" id="price">
             <option value="0"></option>
-            <option value="1">По возростанию цены</option>
-            <option value="2">По убыванию цены</option>
+            <option value="&_sort=price&_order=asc">По возростанию цены</option>
+            <option value="&_sort=price&_order=desc">По убыванию цены</option>
         </select>
     </div>
     <div class="cards-field"></div>
